@@ -4,7 +4,7 @@ project(free_the_chick_cpp)
 set(CMAKE_CXX_STANDARD 17)
 
 set(EXECUTABLE_NAME "FreeTheChick")
-add_executable(${EXECUTABLE_NAME} main.cpp)
+add_executable(${EXECUTABLE_NAME} src/main.cpp include/Map.h src/Map.cpp)
 
 # Detect and add SFML
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules" ${CMAKE_MODULE_PATH})
