@@ -37,10 +37,10 @@ vector<sf::RectangleShape> get_grid_lines(const vector<int> &positions, float ma
 }
 
 int main() {
-    sf::RenderWindow window{sf::VideoMode(600, 600), "Free The Chick!"};
+    sf::RenderWindow window{sf::VideoMode{600, 600}, "Free The Chick!"};
+
     sf::Texture player_texture;
     player_texture.loadFromFile("player.png");
-    sf::Sprite player_sprite{player_texture};
 
     constexpr int map_pixel_offset = 50;
     constexpr int map_size = 500;
@@ -51,9 +51,16 @@ int main() {
 
     // Our game map
     Map map{rows, rows};
+    vector<vector<MapSpace>> grid;
+
+    MapSpace player_space {'P'};
+    player_space.set_sprite_texture(player_texture);
+    map.update_grid_space(1, 1, player_space);
 
     sf::Event current_event;
     while (window.isOpen()) {
+        grid = map.get_char_grid();
+
         while (window.pollEvent(current_event)) {
             if (current_event.type == sf::Event::Closed)
                 window.close();
@@ -64,7 +71,20 @@ int main() {
         {
             window.draw(l);
         }
-        window.draw(player_sprite);
+
+        // Refactor the Map API, it's not very intuitive to use right now
+        for (int i = 0; i < rows; ++i)
+        {
+            for (int j = 0; j < rows; ++j)
+            {
+                if (grid[i][j].get_entity() != '#')
+                {
+                    grid[i][j].set_sprite_pos(sf::Vector2f(grid_positions[i] + 5, grid_positions[j] + 5));
+                    window.draw(grid[i][j].get_sprite());
+                }
+            }
+        }
+
         window.display();
     }
 
